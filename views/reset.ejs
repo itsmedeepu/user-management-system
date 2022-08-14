@@ -23,20 +23,24 @@
         <div class="row">
             <div class="card col-lg-6">
                 <div class="card-header">
-                    <h2 class="text-center">User Login</h2>
+                    <h2 class="text-center">Reset Password</h2>
                 </div>
                 <div class="card-body">
-                    <form class="col-lg-6 col-md-6 col-sm-6 m-auto" method="post" action="/login">
+                    <form class="col-lg-6 col-md-6 col-sm-6 m-auto" method="post" action="/reset">
                     <div class="form-group">
                         <label>Email</label>
                         <input class="form-control" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
+                        <label>New Password</label>
                         <input class="form-control" name="password" required>
                     </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input class="form-control" name="cpassword" required>
+                    </div>
                     <br>
-                        <input type="submit" class="btn  btn-success" value="Login" >
+                        <input type="submit" class="btn  btn-success" value="Reset" >
 
                         <input style="float:right;" type="reset" class="btn  btn-warning" value="Reset" >
 

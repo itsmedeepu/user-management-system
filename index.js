@@ -4,8 +4,10 @@ require('dotenv').config();
 require("ejs");
 
 const bcrypt =require("bcryptjs");
+const e = require('express');
 
 const express=require("express");
+const { reset } = require('nodemon');
 const app=express();
 const port =process.env.port || 5050
 
@@ -44,6 +46,14 @@ app.get("/login",(req,res)=>{
     res.render("login",{success:"",error:""})
 })
 
+
+
+app.get("/reset",(req,res)=>{
+
+    res.render("reset",{success:"",error:""})
+
+
+})
 //for user registration  request 
 
 app.post("/register",async (req,res)=>{
@@ -89,25 +99,34 @@ app.post("/register",async (req,res)=>{
 app.post("/login",async (req,res)=>{
 try {
 
-   // const validatepassword=bcrypt.compare()
-   const userverify =User.findOne({email:req.body.email});
-   const validatepassword= await bcrypt.compare(req.body.password,userverify.password)
-   if(validatepassword){
+   const userverify = await User.findOne({email:req.body.email});
 
+   if(userverify){
+
+    const validatepassword= await bcrypt.compare(req.body.password,userverify.password)
+    
+   if(validatepassword){
     // res.status(201).send("user with details found");
     res.render("login",{success:"login success",error:""})
-
-
    }
 
    else{
 
-    console.log("wrong user details   ");
+    console.log("wrong user details ");
     res.render("login",{error:"login failed",success:""})
-    
+
+   }
+
+   }
+   else{
+
+    console.log("wrong user details ");
+    res.render("login",{error:"login failed",success:""})
 
 
    }
+
+   
 }catch(err){
 
     console.log(`something went bad at server please try after some time `);
@@ -122,7 +141,7 @@ try {
 app.put("/update/:id",async(req,res)=>{
     const userid=req.params.id
     const updatedata=req.body
-    //find user exist in databse and update accordingly
+    //find user exist in database and update accordingly
     try{
     const userfind= await User.findByIdAndUpdate(userid,updatedata,{new:true});
     if(userfind){
@@ -146,7 +165,7 @@ catch(err){
     res.status(404).send("!!Ooops something went bad at server");
 }
 })
-//delete user 
+// //delete user 
 app.get("/delete/:id",async(req,res)=>{
     const userid=req.params.id
     //find user exist in database and update accordingly
@@ -179,6 +198,87 @@ catch(err){
 }
 
 })
+
+//reset password
+
+
+app.post("/reset",async (req,res)=>{
+
+    try{
+        const resetd=req.body
+
+        if(resetd.cpassword===resetd.password)
+        {
+
+            const resethash = await bcrypt.hash(req.body.password, 10);
+
+            const userfind = await User.findOneAndUpdate({email:req.body.email},{$set:{password:resethash}});
+            if(userfind){
+
+
+                console.log(`password updated sucessfully`)
+
+                res.render("reset",{success:"password updated sucessfully ",error:""})
+
+
+
+
+            }
+            else{
+
+                console.log(`email not found `)
+
+                res.render("reset",{error:"email not found ",success:""})
+
+
+
+            }
+
+
+
+
+
+
+        }
+        else{
+            console.log(`Password not matching`)
+
+            res.render("reset",{error:"password not matching ",success:""})
+
+
+        }
+
+
+
+
+
+
+
+
+    }catch(err){
+
+
+        console.log(`something went bad at server`)
+
+        res.render("reset",{error:"server error"})
+    }
+
+
+
+
+
+
+})
+
+
+
+
+
+
+
+
+
+
 
 
 
