@@ -36,6 +36,14 @@ console.log(userfetch);
 
 })
 
+app.get("/dashboard",async (req,res)=>{
+
+    const userdisplay= await User.find({})
+    res.render("dashboard",{data:userdisplay,success:"",error:""})
+ 
+ 
+ })
+
 
 app.get("/register",(req,res)=>{
 
@@ -170,20 +178,24 @@ app.get("/delete/:id",async(req,res)=>{
     const userid=req.params.id
     //find user exist in database and update accordingly
     try{
+        const userfetchs= await User.find({})
     const userfinddele= await User.findByIdAndRemove(userid);
     if(userfinddele){
 
 
         console.log(`user deleted successfully`);
 
-        res.status(201).send("user deleted successfully ");
+        //res.status(201).send("user deleted successfully ");
+        res.render("dashboard",{data:userfetchs,success:"user deleted sucessfully",error:""})
 
 
     }
     else{
 
+        res.render("dashboard",{data:userfetchs,success:"",error:"user not deleted "})
+
         console.log(`user not deleted  `);
-        res.status(404).send("user not deleted ");
+        //res.status(404).send("user not deleted ");
 
     }
 
@@ -193,7 +205,9 @@ catch(err){
 
     console.log("!!Ooops something went bad at server",err);
 
-    res.status(404).send("!!Ooops something went bad at server");
+   // res.status(404).send("!!Ooops something went bad at server");
+   res.render("dashboard")
+
 
 }
 
@@ -203,41 +217,25 @@ catch(err){
 
 
 app.post("/reset",async (req,res)=>{
-
     try{
         const resetd=req.body
-
         if(resetd.cpassword===resetd.password)
         {
-
             const resethash = await bcrypt.hash(req.body.password, 10);
 
             const userfind = await User.findOneAndUpdate({email:req.body.email},{$set:{password:resethash}});
             if(userfind){
 
-
                 console.log(`password updated sucessfully`)
 
                 res.render("reset",{success:"password updated sucessfully ",error:""})
-
-
-
-
             }
             else{
 
                 console.log(`email not found `)
 
                 res.render("reset",{error:"email not found ",success:""})
-
-
-
             }
-
-
-
-
-
 
         }
         else{
@@ -245,29 +243,11 @@ app.post("/reset",async (req,res)=>{
 
             res.render("reset",{error:"password not matching ",success:""})
 
-
         }
-
-
-
-
-
-
-
-
     }catch(err){
-
-
         console.log(`something went bad at server`)
-
         res.render("reset",{error:"server error"})
     }
-
-
-
-
-
-
 })
 
 
