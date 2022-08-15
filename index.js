@@ -39,7 +39,7 @@ console.log(userfetch);
 app.get("/dashboard",async (req,res)=>{
 
     const userdisplay= await User.find({})
-    res.render("dashboard",{data:userdisplay,success:"",error:""})
+    res.render("dashboard",{data:userdisplay})
  
  
  })
@@ -62,6 +62,8 @@ app.get("/reset",(req,res)=>{
 
 
 })
+
+
 //for user registration  request 
 
 app.post("/register",async (req,res)=>{
@@ -146,24 +148,33 @@ try {
 
 })
 //update user details
-app.put("/update/:id",async(req,res)=>{
+app.post("/update/:id",async(req,res)=>{
     const userid=req.params.id
     const updatedata=req.body
-    //find user exist in database and update accordingly
+
+
+
     try{
     const userfind= await User.findByIdAndUpdate(userid,updatedata,{new:true});
     if(userfind){
 
 
-        console.log(`user updated successfully`);
+        // console.log(`user updated successfully`);
 
-        res.status(201).send("user updated");
+        // res.status(201).send("user updated");
+        res.send("1")
+
+        console.log("user updated")
+
+
     }
     else{
 
-        console.log(`user not updated `);
+        console.log(`user not updated`);
 
-        res.status(404).send("user not updated");
+        // res.status(404).send("user not updated");
+
+        res.status(401).send("data not updated");
 
     }
 }
@@ -173,6 +184,13 @@ catch(err){
     res.status(404).send("!!Ooops something went bad at server");
 }
 })
+
+
+
+
+
+
+
 // //delete user 
 app.get("/delete/:id",async(req,res)=>{
     const userid=req.params.id
@@ -181,40 +199,73 @@ app.get("/delete/:id",async(req,res)=>{
         const userfetchs= await User.find({})
     const userfinddele= await User.findByIdAndRemove(userid);
     if(userfinddele){
-
-
-        console.log(`user deleted successfully`);
+        // console.log(`user deleted successfully`);
 
         //res.status(201).send("user deleted successfully ");
-        res.render("dashboard",{data:userfetchs,success:"user deleted sucessfully",error:""})
+        // res.render("dashboard",{data:userfetchs,success:"user deleted sucessfully",error:""})
+        // res.render("301","dashboard")
 
-
+        res.status(201).send('user deleted sucessfully')
     }
     else{
 
-        res.render("dashboard",{data:userfetchs,success:"",error:"user not deleted "})
+        // res.render("dashboard",{data:userfetchs,success:"",error:"user not deleted "})
 
-        console.log(`user not deleted  `);
+        // console.log(`user not deleted  `);
+
+        res.status(404).send("user not deleted")
         //res.status(404).send("user not deleted ");
 
     }
 
 }
 catch(err){
-
-
     console.log("!!Ooops something went bad at server",err);
 
    // res.status(404).send("!!Ooops something went bad at server");
    res.render("dashboard")
 
+}
+
+})
+
+///update id
+
+app.get("/update/:id",async(req,res)=>{
+    const userid=req.params.id
+    //find user exist in database and update accordingly
+    try{
+        const userfetchs= await User.findOne({id:userid})
+        
+
+        if(userfetchs){
+
+        res.render('update',{data:userfetchs})
+
+        }
+        else{
+
+            res.status(404).send("user not found ");
+
+
+        }
+    
+}
+catch(err){
+    console.log("!!Ooops something went bad at server",err);
+
+   // res.status(404).send("!!Ooops something went bad at server");
+   res.render("dashboard")
 
 }
 
 })
 
-//reset password
 
+
+
+
+//reset password
 
 app.post("/reset",async (req,res)=>{
     try{
@@ -249,16 +300,6 @@ app.post("/reset",async (req,res)=>{
         res.render("reset",{error:"server error"})
     }
 })
-
-
-
-
-
-
-
-
-
-
 
 
 

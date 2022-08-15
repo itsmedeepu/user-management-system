@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container fluid">
+        <div class="row">
+            <div class="card col-lg-6">
+                <div class="card-header">
+                    <h2 class="text-center">update user</h2>
+                </div>
+                <div class="card-body">
+                
+                    <form class="col-lg-6 col-md-6 col-sm-6 m-auto" id="updateform" >
+                        <!-- <input type="hidden" class="form-control" value="<%=data.id%>" name="id" required> -->
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" value="<%=data.name%>"  name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" value="<%=data.email%>" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-select" name="status"   aria-label="Default select example" required>
+                            <option value="true" <%=data.status===true? 'selected' : '' %>>True</option>
+                            <option value="false" <%=data.status===false ? 'selected' : '' %>>False</option>
+                          </select>
+                    </div>
+                    <br>
+                        <button type="button" onclick="update('<%=data.id%>')" class="btn  btn-success" > Update user</button>
+
+                        <input style="float:right;" type="reset" class="btn  btn-warning" value="Reset" >
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <script>
+
+
+function update(id){
+
+   let data = $("#updateform").serialize();
+
+    $.ajax({
+        method:'post',
+        dataType:"json",
+        data:data,
+        success:function(res){
+
+            if(res=='1'){
+
+                alert("user updated sucessfully")
+            }
+            else{
+
+                alert("something went bad try again")
+            }
+
+            //window.oc
+
+
+        }
+
+
+    })
+
+
+
+
+}
+
+
+
+    </script>
+
+    
+    
+</body>
+</html>

@@ -11,19 +11,7 @@
 </head>
 <body>
     <div class="container fluid">
-
-
-        <% if(success!="") {%>
-            <div class="alert alert-success" role="alert">
-                <%=success%>
-              </div>
-              <% } %>
-              <% if(error!="") {%>
-                <div class="alert alert-danger" role="alert">
-                    <%=error%>
-                  </div>
-                  <% } %>
-        <table class=" table col-lg-10 table-bordered mt-5 shadow-lg">
+        <table class="table col-lg-10 table-bordered mt-5 shadow-lg">
             <thead>
                 <tr>
                     <th>SI.NO</th>
@@ -44,10 +32,7 @@
                       <td><%= data[i].name%></td>
                       <td><%= data[i].email%></td>
                       <td><%= data[i].status%></td>
-                      <td><a
-                        href="/delete/<%= data[i].id%>"
-                        class="btn btn-success"
-                    >Delete</a> <button type="button" class="btn btn-danger">Delete</button></td>
+                      <td><button type="button" onclick="upd('<%=data[i].id%>')" class="btn btn-success">Update</button>  <button type="button" class="btn btn-danger" onclick="del('<%=data[i].id%>')" >Delete</button></td>
                     </tr>
                     <% }
                              
@@ -62,9 +47,76 @@
     </div>
 
 
+    <script>
+
+        function del(id){
 
 
+
+
+            $.ajax({
+
+            url: '/delete/'+id,
+            type: 'GET',
+            success:function (res) {
+
+                if(res){
+
+                alert(res)
+
+                window.location.href = "/dashboard";
+
+                }
+                else{
+
+                    alert("user not deleted")
+                }
+
+                
+              }
+            
+            })
+
+        }
+function upd(id){
+
+    window.location.href = "/update/"+id;
+
+
+// $.ajax({
+
+// url: '/update/'+id,
+// type: 'GET',
+// success:function (res) {
+
+//     if(res){
+
+//     alert(JSON.stringify(res))
+
+//     // window.location.href = "/dashboard";
+
+//     }
+//     else{
+
+//         alert("user not deleted")
+//     }
+
     
+//   }
+
+// })
+
+}
+
+
+
+
+
+
+
+    </script>
     
+
+
 </body>
 </html>
